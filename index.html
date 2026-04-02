@@ -1,636 +1,854 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Govagentic · AI Governance & Controlled Agent Decision-Making</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=Source+Serif+4:wght@300;400;600&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --ink: #0f1923; --ink-2: #1e2d3d; --ink-3: #2d3f52;
-      --slate: #4a5a6b; --mist: #8a9aab;
-      --paper: #f4f1eb; --paper-2: #ede9e1; --paper-3: #e4dfd5;
-      --teal: #1a6b5a; --teal-light: #2a8a72; --teal-bg: rgba(26,107,90,0.08);
-      --gold: #8a6d2f; --gold-light: #c9a84c;
-      --red: #b33a3a; --red-bg: rgba(179,58,58,0.08);
-      --orange: #b35a1a; --orange-bg: rgba(179,90,26,0.08);
-      --border: rgba(15,25,35,0.12); --border-2: rgba(15,25,35,0.06);
-    }
-    html, body { height: 100%; overflow: hidden; }
-    body { background: var(--paper-3); color: var(--ink); font-family: 'Source Serif 4', serif; display: flex; flex-direction: column; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    .topbar { background: var(--ink); padding: 0 20px; height: 48px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-    .topbar-left { display: flex; align-items: center; gap: 10px; }
-    .topbar-logo { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: #f4f1eb; }
-    .topbar-logo span { color: var(--teal-light); }
-    .topbar-sep { width: 1px; height: 18px; background: rgba(255,255,255,0.1); }
-    .topbar-sub { font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; color: rgba(244,241,235,0.35); text-transform: uppercase; }
-    .topbar-right { display: flex; align-items: center; gap: 14px; }
-    .reg-badges { display: flex; gap: 5px; }
-    .reg-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.5rem; letter-spacing: 0.08em; padding: 2px 7px; border-radius: 4px; background: rgba(26,107,90,0.15); border: 1px solid rgba(26,107,90,0.25); color: var(--teal-light); }
-    .status-wrap { display: flex; align-items: center; gap: 5px; }
-    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal-light); animation: pdot 2s ease-in-out infinite; }
-    @keyframes pdot { 0%,100%{opacity:1}50%{opacity:0.3} }
-    .status-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.5rem; color: rgba(244,241,235,0.3); }
+<!-- Primary SEO -->
+<title>Govagentic — AI Governance Consulting for Mid-Market Companies</title>
+<meta name="description" content="Govagentic helps legal, ops, and risk leaders at mid-market companies build AI governance frameworks before the exposure becomes a liability. Audits, policies, and fractional AI governance advisory.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://govagentic.ai/">
 
-    .layout { flex: 1; display: grid; grid-template-columns: 230px 1fr 340px; overflow: hidden; }
+<!-- Open Graph — controls LinkedIn, Slack, and social previews -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://govagentic.ai/">
+<meta property="og:title" content="Govagentic — AI Governance Consulting for Mid-Market Companies">
+<meta property="og:description" content="Your business is running on AI. Nobody's governing it. Govagentic builds the governance layer mid-market companies need — before the exposure becomes a liability.">
+<meta property="og:site_name" content="Govagentic">
+<meta property="og:locale" content="en_CA">
 
-    .panel { background: var(--paper-2); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
-    .panel:last-child { border-right: none; }
-    .panel-header { padding: 13px 16px 11px; border-bottom: 1px solid var(--border-2); flex-shrink: 0; }
-    .panel-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mist); margin-bottom: 3px; }
-    .panel-title { font-family: 'Playfair Display', serif; font-size: 0.9rem; font-weight: 700; color: var(--ink); }
-    .panel-body { flex: 1; overflow-y: auto; padding: 10px 12px; }
+<!-- Twitter / X Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Govagentic — AI Governance Consulting">
+<meta name="twitter:description" content="Your business is running on AI. Nobody's governing it. Govagentic builds the governance layer mid-market companies need.">
 
-    .vendor-card { background: var(--paper); border: 1px solid var(--border-2); border-radius: 8px; padding: 11px 13px; margin-bottom: 8px; cursor: pointer; transition: border-color 0.2s; }
-    .vendor-card:hover { border-color: var(--border); }
-    .vendor-card.selected { border-color: var(--teal); background: var(--teal-bg); }
-    .vendor-name { font-family: 'Playfair Display', serif; font-size: 0.85rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
-    .vendor-id { font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; color: var(--mist); margin-bottom: 5px; }
-    .vendor-meta { font-size: 0.7rem; color: var(--slate); line-height: 1.45; margin-bottom: 6px; }
-    .risk-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 0.5rem; letter-spacing: 0.08em; }
-    .risk-HIGH { background: var(--red-bg); border: 1px solid rgba(179,58,58,0.2); color: var(--red); }
-    .risk-MEDIUM { background: var(--orange-bg); border: 1px solid rgba(179,90,26,0.2); color: var(--orange); }
-    .risk-LOW { background: var(--teal-bg); border: 1px solid rgba(26,107,90,0.2); color: var(--teal); }
+<!-- Structured data — helps Google understand the business type -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Govagentic",
+  "description": "AI governance consulting for mid-market companies. We help legal, ops, and risk leaders build governance frameworks for agentic AI systems.",
+  "url": "https://govagentic.ai",
+  "email": "hello@govagentic.ai",
+  "areaServed": ["CA", "US"],
+  "serviceType": ["AI Governance Consulting", "Risk Management", "Compliance Consulting"],
+  "knowsAbout": ["Agentic AI", "AI Governance", "Third-party Risk Management", "AIDA", "AI Policy"],
+  "sameAs": []
+}
+</script>
 
-    .chat-panel { background: var(--paper); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
-    .vendor-header { padding: 13px 20px; border-bottom: 1px solid var(--border-2); flex-shrink: 0; }
-    .vendor-header-empty { font-size: 0.78rem; color: var(--mist); font-style: italic; }
-    .vendor-header-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
-    .vendor-header-meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; color: var(--mist); }
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    .chat-area { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 14px; }
-    .chat-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; padding: 40px 30px; }
-    .chat-empty-icon { width: 48px; height: 48px; background: var(--paper-2); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-    .chat-empty-title { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--ink-3); }
-    .chat-empty-sub { font-size: 0.75rem; color: var(--mist); max-width: 320px; line-height: 1.65; }
-    .suggestion-chips { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; margin-top: 8px; }
-    .chip { padding: 6px 13px; background: var(--paper-2); border: 1px solid var(--border); border-radius: 18px; font-size: 0.72rem; color: var(--ink-3); cursor: pointer; transition: border-color 0.2s, background 0.2s; }
-    .chip:hover { border-color: var(--teal); background: var(--teal-bg); color: var(--teal); }
+  :root {
+    --ink: #0f0f0f;
+    --ink-muted: #555;
+    --ink-faint: #999;
+    --paper: #f7f5f0;
+    --paper-warm: #ede9e1;
+    --accent: #1a3a2a;
+    --accent-light: #2d6648;
+    --accent-pale: #e8f0eb;
+    --rule: rgba(15,15,15,0.12);
+    --serif: 'Instrument Serif', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
 
-    .msg { display: flex; flex-direction: column; gap: 4px; max-width: 86%; }
-    .msg-user { align-self: flex-end; }
-    .msg-assistant { align-self: flex-start; }
-    .msg-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.5rem; letter-spacing: 0.1em; text-transform: uppercase; }
-    .msg-user .msg-label { color: var(--mist); text-align: right; }
-    .msg-assistant .msg-label { color: var(--teal); }
-    .msg-bubble { padding: 11px 15px; border-radius: 12px; font-size: 0.8rem; line-height: 1.7; }
-    .msg-user .msg-bubble { background: var(--ink); color: #f4f1eb; border-bottom-right-radius: 3px; }
-    .msg-assistant .msg-bubble { background: var(--paper-2); border: 1px solid var(--border-2); color: var(--ink); border-bottom-left-radius: 3px; white-space: pre-wrap; }
-    .msg-typing .msg-bubble { color: var(--mist); font-style: italic; }
-    .msg-policy .msg-bubble { background: var(--red-bg); border: 1px solid rgba(179,58,58,0.2); color: var(--ink); border-bottom-left-radius: 3px; }
-    .msg-policy .msg-label { color: var(--red); }
+  html { scroll-behavior: smooth; }
 
-    .input-area { padding: 14px 20px; border-top: 1px solid var(--border-2); background: var(--paper); flex-shrink: 0; }
-    .input-row { display: flex; gap: 8px; align-items: flex-end; }
-    .input-box { flex: 1; background: var(--paper-2); border: 1px solid var(--border); border-radius: 12px; padding: 9px 14px; font-family: 'Source Serif 4', serif; font-size: 0.82rem; color: var(--ink); resize: none; outline: none; min-height: 40px; max-height: 110px; line-height: 1.5; transition: border-color 0.2s; }
-    .input-box:focus { border-color: var(--teal); }
-    .input-box::placeholder { color: var(--mist); }
-    .input-box:disabled { opacity: 0.5; cursor: not-allowed; }
-    .send-btn { width: 40px; height: 40px; background: var(--ink); border: none; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.2s, opacity 0.2s; }
-    .send-btn:hover { background: var(--ink-2); }
-    .send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-    .send-btn svg { width: 16px; height: 16px; fill: #f4f1eb; }
-    .input-hint { margin-top: 5px; font-family: 'IBM Plex Mono', monospace; font-size: 0.5rem; color: var(--mist); }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    .tab-bar { display: flex; border-bottom: 1px solid var(--border-2); flex-shrink: 0; }
-    .tab-btn { flex: 1; padding: 11px 10px; background: none; border: none; border-bottom: 2px solid transparent; font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mist); cursor: pointer; transition: color 0.2s, border-color 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-    .tab-btn:hover { color: var(--ink-3); }
-    .tab-btn.active { color: var(--teal); border-bottom-color: var(--teal); }
-    .tab-badge { display: none; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 50%; font-size: 0.48rem; font-weight: 700; background: var(--red); color: white; }
-    .tab-badge.visible { display: inline-flex; animation: badge-pop 0.3s ease; }
-    @keyframes badge-pop { from{transform:scale(0)}to{transform:scale(1)} }
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
 
-    .tab-content { display: none; flex: 1; overflow-y: auto; flex-direction: column; padding: 12px; }
-    .tab-content.active { display: flex; }
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
 
-    .risk-card-empty { padding: 24px 10px; text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--mist); font-style: italic; line-height: 1.8; }
-    .rc-vendor { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
-    .rc-meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.5rem; color: var(--mist); margin-bottom: 12px; }
-    .rc-score-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding: 12px 14px; border-radius: 8px; }
-    .rc-score-row.HIGH { background: var(--red-bg); border: 1px solid rgba(179,58,58,0.15); }
-    .rc-score-row.MEDIUM { background: var(--orange-bg); border: 1px solid rgba(179,90,26,0.15); }
-    .rc-score-row.LOW { background: var(--teal-bg); border: 1px solid rgba(26,107,90,0.15); }
-    .rc-score-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; letter-spacing: 0.15em; }
-    .rc-score-label.HIGH { color: var(--red); } .rc-score-label.MEDIUM { color: var(--orange); } .rc-score-label.LOW { color: var(--teal); }
-    .rc-score-sub { font-size: 0.62rem; color: var(--slate); margin-top: 3px; }
-    .rc-score-val { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; }
-    .rc-score-val.HIGH { color: var(--red); } .rc-score-val.MEDIUM { color: var(--orange); } .rc-score-val.LOW { color: var(--teal); }
-    .rc-flag-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 14px; }
-    .rc-flag-box { background: var(--paper); border: 1px solid var(--border-2); border-radius: 7px; padding: 8px; text-align: center; }
-    .rc-flag-num { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; }
-    .rc-flag-num.CRITICAL { color: var(--red); } .rc-flag-num.HIGH { color: var(--orange); } .rc-flag-num.MEDIUM { color: var(--gold); }
-    .rc-flag-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.46rem; letter-spacing: 0.1em; color: var(--mist); margin-top: 2px; }
-    .rc-section-title { font-family: 'IBM Plex Mono', monospace; font-size: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--mist); margin: 12px 0 6px; }
-    .rc-flag-item { border-left: 2px solid; border-radius: 0 6px 6px 0; padding: 7px 10px; margin-bottom: 6px; font-size: 0.72rem; color: var(--slate); line-height: 1.55; }
-    .rc-flag-item.CRITICAL { border-color: var(--red); background: var(--red-bg); }
-    .rc-flag-item.HIGH { border-color: var(--orange); background: var(--orange-bg); }
-    .rc-flag-item.MEDIUM { border-color: var(--gold-light); background: rgba(201,168,76,0.06); }
-    .rc-flag-sev { font-family: 'IBM Plex Mono', monospace; font-size: 0.48rem; font-weight: 500; display: block; margin-bottom: 2px; }
-    .rc-flag-sev.CRITICAL { color: var(--red); } .rc-flag-sev.HIGH { color: var(--orange); } .rc-flag-sev.MEDIUM { color: var(--gold); }
-    .rc-policy-ref { font-family: 'IBM Plex Mono', monospace; font-size: 0.46rem; color: var(--mist); margin-top: 3px; }
-    .rc-actions-list { list-style: none; padding: 0; }
-    .rc-action-item { font-size: 0.72rem; color: var(--slate); padding: 6px 0; border-bottom: 1px solid var(--border-2); line-height: 1.5; }
-    .rc-action-item:last-child { border-bottom: none; }
-    .rc-action-item::before { content: '→ '; color: var(--teal); font-weight: 600; }
-    .rc-footer { font-family: 'IBM Plex Mono', monospace; font-size: 0.46rem; color: var(--mist); margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border-2); line-height: 1.7; }
+  .nav-logo span {
+    color: var(--accent-light);
+    font-style: italic;
+  }
 
-    .audit-entry { background: var(--paper); border: 1px solid var(--border-2); border-radius: 6px; padding: 9px 11px; margin-bottom: 7px; font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; }
-    .audit-entry.policy-block { border-color: rgba(179,58,58,0.25); background: var(--red-bg); }
-    .audit-time { color: var(--mist); margin-bottom: 2px; }
-    .audit-tool { color: var(--teal); font-weight: 500; margin-bottom: 1px; }
-    .audit-tool.blocked { color: var(--red); }
-    .audit-vendor { color: var(--gold); margin-bottom: 1px; }
-    .audit-output { color: var(--slate); line-height: 1.4; }
-    .audit-status-success { color: var(--teal); margin-top: 2px; }
-    .audit-status-error { color: var(--red); margin-top: 2px; }
-    .audit-status-blocked { color: var(--red); margin-top: 2px; }
-    .audit-empty { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--mist); padding: 20px; font-style: italic; line-height: 1.6; }
-    .export-btn { width: 100%; padding: 8px; background: none; border: 1px solid var(--border); border-radius: 6px; font-family: 'IBM Plex Mono', monospace; font-size: 0.55rem; color: var(--slate); cursor: pointer; transition: border-color 0.2s, color 0.2s; margin-top: 4px; }
-    .export-btn:hover { border-color: var(--teal); color: var(--teal); }
+  .nav-cta {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid var(--accent);
+    padding: 0.5rem 1.25rem;
+    border-radius: 2px;
+    letter-spacing: 0.03em;
+    transition: background 0.2s, color 0.2s;
+  }
 
-    .trace-empty { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--mist); padding: 20px; font-style: italic; line-height: 1.6; }
-    .trace-wrap { display: flex; flex-direction: column; gap: 10px; }
-    .trace-card { background: var(--paper); border: 1px solid var(--border-2); border-radius: 8px; padding: 10px 12px; }
-    .trace-header-title { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
-    .trace-header-meta, .trace-mini, .trace-kv-label, .trace-kv-value, .trace-step-meta, .trace-policy-line, .trace-footer { font-family: 'IBM Plex Mono', monospace; }
-    .trace-header-meta, .trace-mini, .trace-step-meta, .trace-policy-line, .trace-footer { font-size: 0.5rem; color: var(--mist); line-height: 1.6; }
-    .trace-section-title { font-family: 'IBM Plex Mono', monospace; font-size: 0.5rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mist); margin: 4px 0 6px; }
-    .trace-request-grid, .trace-final-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
-    .trace-kv { background: var(--paper-2); border: 1px solid var(--border-2); border-radius: 6px; padding: 7px 9px; }
-    .trace-kv-label { font-size: 0.46rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mist); margin-bottom: 3px; }
-    .trace-kv-value { font-size: 0.58rem; color: var(--ink-3); line-height: 1.6; white-space: pre-wrap; }
-    .trace-status-pill { display: inline-block; padding: 2px 8px; border-radius: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 0.48rem; letter-spacing: 0.08em; border: 1px solid; }
-    .trace-status-pill.completed, .trace-step-status.success { background: var(--teal-bg); border-color: rgba(26,107,90,0.2); color: var(--teal); }
-    .trace-status-pill.completed_with_policy_event { background: var(--red-bg); border-color: rgba(179,58,58,0.2); color: var(--red); }
-    .trace-status-pill.partial, .trace-step-status.partial { background: rgba(201,168,76,0.08); border-color: rgba(201,168,76,0.22); color: var(--gold); }
-    .trace-status-pill.blocked, .trace-step-status.blocked, .trace-status-pill.error, .trace-step-status.error { background: var(--red-bg); border-color: rgba(179,58,58,0.2); color: var(--red); }
-    .trace-step { border-left: 2px solid var(--border); padding-left: 10px; margin-left: 2px; }
-    .trace-step.success { border-left-color: var(--teal); }
-    .trace-step.partial { border-left-color: var(--gold-light); }
-    .trace-step.blocked, .trace-step.error { border-left-color: var(--red); }
-    .trace-step-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 5px; }
-    .trace-step-title { font-family: 'Playfair Display', serif; font-size: 0.8rem; font-weight: 700; color: var(--ink); }
-    .trace-step-subtitle { font-family: 'IBM Plex Mono', monospace; font-size: 0.5rem; color: var(--mist); margin-bottom: 6px; }
-    .trace-step-body { display: grid; gap: 6px; }
-    .trace-step-box { background: var(--paper-2); border: 1px solid var(--border-2); border-radius: 6px; padding: 7px 9px; }
-    .trace-step-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.45rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mist); margin-bottom: 3px; }
-    .trace-step-value { font-size: 0.68rem; color: var(--slate); line-height: 1.55; white-space: pre-wrap; }
-    .trace-evidence-row { display: grid; grid-template-columns: 1fr; gap: 6px; }
-    .trace-evidence-item { background: var(--paper-2); border: 1px solid var(--border-2); border-radius: 6px; padding: 8px 9px; }
-    .trace-evidence-source { font-size: 0.68rem; color: var(--ink-3); line-height: 1.5; margin-bottom: 3px; }
-    .trace-evidence-finding { font-size: 0.68rem; color: var(--slate); line-height: 1.5; }
-    .trace-evidence-meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.46rem; color: var(--mist); margin-top: 4px; }
-    .trace-actions-list { list-style: none; padding: 0; margin: 0; }
-    .trace-actions-list li { font-size: 0.68rem; color: var(--slate); line-height: 1.5; padding: 4px 0; border-bottom: 1px solid var(--border-2); }
-    .trace-actions-list li:last-child { border-bottom: none; }
-    .trace-actions-list li::before { content: '→ '; color: var(--teal); font-weight: 600; }
+  .nav-cta:hover {
+    background: var(--accent);
+    color: var(--paper);
+  }
 
-    .arch-footer { background: var(--ink); padding: 6px 20px; display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
-    .arch-box { padding: 2px 7px; border-radius: 3px; font-family: 'IBM Plex Mono', monospace; font-size: 0.48rem; }
-    .arch-client { background: rgba(255,255,255,0.05); color: rgba(244,241,235,0.45); }
-    .arch-gateway { background: rgba(26,107,90,0.18); color: var(--teal-light); }
-    .arch-agent { background: rgba(201,168,76,0.12); color: var(--gold-light); }
-    .arch-log { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); color: rgba(244,241,235,0.3); }
-    .arch-arrow { color: rgba(255,255,255,0.15); font-size: 0.5rem; }
-    .arch-tagline { margin-left: 10px; font-family: 'IBM Plex Mono', monospace; font-size: 0.44rem; color: rgba(244,241,235,0.18); }
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 3rem 5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
 
-    .context-banner { background: var(--paper-2); border-bottom: 1px solid var(--border); padding: 10px 20px; flex-shrink: 0; }
-    .context-banner-title { font-family: 'Playfair Display', serif; font-size: 0.85rem; font-weight: 700; color: var(--ink); margin-bottom: 3px; display: flex; align-items: center; gap: 8px; }
-    .context-demo-tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.5rem; letter-spacing: 0.1em; padding: 2px 7px; border-radius: 10px; background: var(--teal-bg); border: 1px solid rgba(26,107,90,0.2); color: var(--teal); font-weight: 400; }
-    .context-banner-sub { font-size: 0.72rem; color: var(--slate); line-height: 1.6; max-width: 900px; }
-  </style>
+  .hero-eyebrow {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--accent-light);
+  }
+
+  .hero-headline {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 2rem;
+    max-width: 16ch;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--accent-light);
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--ink-muted);
+    max-width: 52ch;
+    line-height: 1.75;
+    margin-bottom: 3rem;
+    font-weight: 300;
+  }
+
+  .hero-sub strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--paper);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.9rem 2rem;
+    border-radius: 2px;
+    letter-spacing: 0.02em;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-light);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color 0.2s;
+  }
+
+  .btn-ghost:hover { color: var(--ink); }
+
+  .hero-rule {
+    width: 100%;
+    height: 1px;
+    background: var(--rule);
+    margin-top: 5rem;
+  }
+
+  /* TENSION STRIP */
+  .tension {
+    background: var(--accent);
+    color: var(--paper);
+    padding: 4rem 3rem;
+  }
+
+  .tension-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .tension-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+
+  .tension-heading {
+    font-family: var(--serif);
+    font-size: 2rem;
+    line-height: 1.2;
+    font-weight: 400;
+  }
+
+  .tension-body {
+    font-size: 0.95rem;
+    opacity: 0.75;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  /* PROBLEM SECTION */
+  .section {
+    padding: 6rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 2rem;
+    height: 1px;
+    background: var(--accent-light);
+  }
+
+  /* SYMPTOMS */
+  .symptoms {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    margin-top: 2rem;
+  }
+
+  .symptom {
+    padding: 2rem;
+    border-right: 1px solid var(--rule);
+  }
+
+  .symptom:last-child { border-right: none; }
+
+  .symptom-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .symptom-title {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+  }
+
+  .symptom-body {
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    line-height: 1.7;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .service-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 2.5rem;
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .service-card:hover {
+    border-color: var(--accent-light);
+    box-shadow: 0 4px 24px rgba(26,58,42,0.08);
+  }
+
+  .service-tag {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-light);
+    margin-bottom: 1rem;
+  }
+
+  .service-title {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .service-body {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    line-height: 1.75;
+    margin-bottom: 1.5rem;
+  }
+
+  .service-outcomes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .service-outcomes li {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .service-outcomes li::before {
+    content: '→';
+    color: var(--accent-light);
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+  }
+
+  .service-price {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+  }
+
+  .service-price strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  /* WHY NOW */
+  .why-now {
+    background: var(--paper-warm);
+    padding: 6rem 3rem;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .why-now-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .why-now-heading {
+    font-family: var(--serif);
+    font-size: 2.5rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    position: sticky;
+    top: 7rem;
+  }
+
+  .why-now-heading em {
+    font-style: italic;
+    color: var(--accent-light);
+  }
+
+  .why-points {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .why-point {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  .why-num {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    color: var(--accent-light);
+    font-style: italic;
+    line-height: 1;
+    padding-top: 0.1rem;
+  }
+
+  .why-text-title {
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    font-size: 1rem;
+  }
+
+  .why-text-body {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    line-height: 1.75;
+  }
+
+  /* ABOUT / CREDIBILITY */
+  .about {
+    padding: 6rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 6rem;
+    align-items: start;
+  }
+
+  .about-quote {
+    font-family: var(--serif);
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 2rem;
+  }
+
+  .about-quote em {
+    font-style: italic;
+    color: var(--accent-light);
+  }
+
+  .about-body {
+    font-size: 0.95rem;
+    color: var(--ink-muted);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .about-sidebar {
+    padding-top: 0.5rem;
+  }
+
+  .credential {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .credential:first-child { border-top: 1px solid var(--rule); }
+
+  .credential-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 0.4rem;
+  }
+
+  .credential-value {
+    font-size: 0.9rem;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+
+  /* CTA SECTION */
+  .cta-section {
+    background: var(--accent);
+    padding: 6rem 3rem;
+    text-align: center;
+  }
+
+  .cta-inner {
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .cta-eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(247,245,240,0.5);
+    margin-bottom: 1.5rem;
+  }
+
+  .cta-heading {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.15;
+    color: var(--paper);
+    margin-bottom: 1.25rem;
+  }
+
+  .cta-body {
+    font-size: 1rem;
+    color: rgba(247,245,240,0.65);
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+    line-height: 1.75;
+  }
+
+  .cta-email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--paper);
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 1rem 2rem;
+    border-radius: 2px;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .cta-email:hover {
+    background: var(--accent-pale);
+    transform: translateY(-1px);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--ink);
+    color: rgba(247,245,240,0.4);
+    padding: 2rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+  }
+
+  .footer-logo {
+    font-family: var(--serif);
+    color: rgba(247,245,240,0.7);
+    font-size: 1rem;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-eyebrow  { animation: fadeUp 0.6s ease both; }
+  .hero-headline { animation: fadeUp 0.7s 0.1s ease both; }
+  .hero-sub      { animation: fadeUp 0.7s 0.2s ease both; }
+  .hero-actions  { animation: fadeUp 0.7s 0.3s ease both; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    .tension-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .section { padding: 4rem 1.5rem; }
+    .symptoms { grid-template-columns: 1fr; }
+    .symptom { border-right: none; border-bottom: 1px solid var(--rule); }
+    .symptom:last-child { border-bottom: none; }
+    .services-grid { grid-template-columns: 1fr; }
+    .why-now { padding: 4rem 1.5rem; }
+    .why-now-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    .why-now-heading { position: static; font-size: 2rem; }
+    .about { grid-template-columns: 1fr; gap: 3rem; padding: 4rem 1.5rem; }
+    .cta-section { padding: 4rem 1.5rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-left">
-    <div class="topbar-logo">Gov<span>agentic</span></div>
-    <div class="topbar-sep"></div>
-    <div class="topbar-sub">Governance of Agentic AI · Control Layer Demo</div>
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Gov<span>agentic</span></a>
+  <a href="#contact" class="nav-cta">Start a conversation</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">AI Governance Consulting</p>
+  <h1 class="hero-headline">Your business is running on AI. <em>Nobody's governing it.</em></h1>
+  <p class="hero-sub">
+    Mid-market companies are deploying AI agents faster than their legal, ops, and risk teams can keep up.
+    <strong>Govagentic helps you build the governance layer before the exposure becomes a liability.</strong>
+  </p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary">Book a free discovery call</a>
+    <a href="https://thedman.github.io/govagentic" target="_blank" rel="noopener" class="btn-ghost">See it in action →</a>
+    <a href="#services" class="btn-ghost">See what we do →</a>
   </div>
-  <div class="topbar-right">
-    <div class="reg-badges">
-      <span class="reg-badge">OSFI B-10</span>
-      <span class="reg-badge">OCC 2013-29</span>
-      <span class="reg-badge">SR 13-19</span>
-      <span class="reg-badge">NIST CSF</span>
+  <div class="hero-rule"></div>
+</section>
+
+<!-- TENSION -->
+<div class="tension">
+  <div class="tension-inner">
+    <div>
+      <p class="tension-label">The problem</p>
+      <h2 class="tension-heading">Your team is already using AI. Your policies haven't caught up.</h2>
     </div>
-    <div class="status-wrap">
-      <div class="status-dot"></div>
-      <div class="status-label">Live Control-Layer Demo · Mock Data</div>
+    <div>
+      <p class="tension-body">
+        The average mid-market company now has AI tools embedded across sales, operations, legal, and finance — most of them adopted bottom-up, without a policy, without an audit trail, and without a clear owner. That's not a technology problem. It's a governance problem. And when something goes wrong — a bad decision made by an agent, a compliance gap surfaced in an audit, a vendor whose AI practices you never vetted — the question will be: who was responsible for this?
+      </p>
     </div>
   </div>
 </div>
 
-<div class="context-banner">
-  <div class="context-banner-title">Govagentic — AI Governance &amp; Control Framework · Vendor Risk Assessment <span class="context-demo-tag">Demo</span></div>
-  <div class="context-banner-sub">A working prototype demonstrating how agentic AI systems can be governed through policy enforcement, action boundaries, and real-time decision traceability. Applied here to vendor risk assessment — showing how organizations can deploy AI agents to automate compliance decisions while maintaining full auditability, policy control, and accountability at every step.</div>
-</div>
-
-<div class="layout">
-
-  <!-- COL 1: VENDORS -->
-  <div class="panel">
-    <div class="panel-header">
-      <div class="panel-label">Vendor Registry</div>
-      <div class="panel-title">Select a vendor</div>
+<!-- DEMO STRIP -->
+<div style="background: var(--paper-warm); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 4rem 3rem;">
+  <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+    <div>
+      <p style="font-size: 0.75rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-light); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem;"><span style="display:block;width:2rem;height:1px;background:var(--accent-light)"></span>Live prototype</p>
+      <h2 style="font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 1.25rem;">Governance in action — not just on paper.</h2>
+      <p style="font-size: 0.95rem; color: var(--ink-muted); line-height: 1.8; margin-bottom: 1.75rem; font-weight: 300;">This working prototype demonstrates what governed agentic AI looks like in practice. Every tool call is logged. Every decision is traceable. Every action runs through a policy engine before execution. This is the architecture we help you build — applied here to vendor risk assessment.</p>
+      <a href="https://thedman.github.io/govagentic" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; gap: 0.6rem; background: var(--accent); color: var(--paper); text-decoration: none; font-size: 0.88rem; font-weight: 500; padding: 0.85rem 1.75rem; border-radius: 2px; letter-spacing: 0.02em;">Open the demo →</a>
     </div>
-    <div class="panel-body" id="vendorList"></div>
-  </div>
-
-  <!-- COL 2: CHAT -->
-  <div class="chat-panel">
-    <div class="vendor-header" id="vendorHeader">
-      <div class="vendor-header-empty">Select a vendor to begin assessment</div>
-    </div>
-    <div class="chat-area" id="chatArea">
-      <div class="chat-empty" id="chatEmpty">
-        <div class="chat-empty-icon">🔍</div>
-        <div class="chat-empty-title">Governed Risk Assessment</div>
-        <div class="chat-empty-sub">Select a vendor and ask a question. The agent operates within defined policy boundaries — every step logged, every decision traceable, risk card populates automatically on full assessment.</div>
-        <div class="suggestion-chips">
-          <div class="chip" onclick="useChip(this)">Summarize the risk posture of this vendor</div>
-          <div class="chip" onclick="useChip(this)">What are the key concerns in the SOC 2 report?</div>
-          <div class="chip" onclick="useChip(this)">Are there any contract issues I should know about?</div>
-          <div class="chip" onclick="useChip(this)">Run a full risk assessment and highlight critical findings</div>
-        </div>
+    <div style="background: var(--accent); border-radius: 4px; padding: 2rem; display: flex; flex-direction: column; gap: 1rem;">
+      <p style="font-size: 0.65rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(247,245,240,0.4); margin-bottom: 0.25rem;">What the demo shows</p>
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div style="display: flex; align-items: flex-start; gap: 0.75rem;"><span style="color: var(--accent-light); flex-shrink: 0;">→</span><span style="font-size: 0.85rem; color: rgba(247,245,240,0.75); line-height: 1.6;">AI agent operating within defined policy boundaries — not freeform</span></div>
+        <div style="display: flex; align-items: flex-start; gap: 0.75rem;"><span style="color: var(--accent-light); flex-shrink: 0;">→</span><span style="font-size: 0.85rem; color: rgba(247,245,240,0.75); line-height: 1.6;">Every tool call logged in real time to an audit evidence trail</span></div>
+        <div style="display: flex; align-items: flex-start; gap: 0.75rem;"><span style="color: var(--accent-light); flex-shrink: 0;">→</span><span style="font-size: 0.85rem; color: rgba(247,245,240,0.75); line-height: 1.6;">Decision trace exported as structured JSON — audit-ready by design</span></div>
+        <div style="display: flex; align-items: flex-start; gap: 0.75rem;"><span style="color: var(--accent-light); flex-shrink: 0;">→</span><span style="font-size: 0.85rem; color: rgba(247,245,240,0.75); line-height: 1.6;">Policy engine blocks out-of-scope requests before the agent acts</span></div>
+        <div style="display: flex; align-items: flex-start; gap: 0.75rem;"><span style="color: var(--accent-light); flex-shrink: 0;">→</span><span style="font-size: 0.85rem; color: rgba(247,245,240,0.75); line-height: 1.6;">Risk card populated automatically — no manual interpretation required</span></div>
       </div>
-    </div>
-    <div class="input-area">
-      <div class="input-row">
-        <textarea class="input-box" id="questionInput" placeholder="Ask about vendor risk, SOC 2 findings, contract terms..." rows="1" disabled onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
-        <button class="send-btn" id="sendBtn" onclick="sendQuestion()" disabled>
-          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-        </button>
-      </div>
-      <div class="input-hint">AI operates within defined controls · Decisions are traceable · Every action is auditable →</div>
+      <p style="font-size: 0.72rem; color: rgba(247,245,240,0.3); margin-top: 0.5rem; font-style: italic;">Mock data · No real vendor information used</p>
     </div>
   </div>
+</div>
 
-  <!-- COL 3: TABBED PANEL -->
-  <div class="panel">
-    <div class="tab-bar">
-      <button class="tab-btn active" id="tab-risk" onclick="switchTab('risk')">
-        Risk Card
-        <span class="tab-badge" id="riskBadge">!</span>
-      </button>
-      <button class="tab-btn" id="tab-trace" onclick="switchTab('trace')">
-        Decision Trace
-        <span class="tab-badge" id="traceBadge">0</span>
-      </button>
-      <button class="tab-btn" id="tab-audit" onclick="switchTab('audit')">
-        Audit Evidence
-        <span class="tab-badge" id="auditBadge">0</span>
-      </button>
+<!-- SYMPTOMS -->
+<div class="section">
+  <p class="section-label">Sound familiar?</p>
+  <div class="symptoms">
+    <div class="symptom">
+      <span class="symptom-icon">⚖️</span>
+      <h3 class="symptom-title">Legal is nervous but doesn't know where to start</h3>
+      <p class="symptom-body">There's no AI use policy. No one has mapped which tools handle sensitive data. The word "liability" keeps coming up in meetings but nothing is getting written down.</p>
     </div>
-    <div class="tab-content active" id="tabRisk">
-      <div id="riskCardInner">
-        <div class="risk-card-empty">Risk assessment will appear here.<br><br>Ask: <em>"Run a full risk assessment"</em></div>
-      </div>
+    <div class="symptom">
+      <span class="symptom-icon">🔄</span>
+      <h3 class="symptom-title">Ops has deployed agents with no oversight layer</h3>
+      <p class="symptom-body">Workflows are running autonomously. Nobody has defined what these agents can and can't do, or what happens when they make a mistake that affects a client or a contract.</p>
     </div>
-    <div class="tab-content" id="tabTrace">
-      <div id="decisionTraceInner">
-        <div class="trace-empty">No decision trace yet.<br><br>Ask: <em>"Run a full risk assessment"</em></div>
-      </div>
-      <button class="export-btn" onclick="exportDecisionTrace()">↓ Export Decision Trace (JSON)</button>
-    </div>
-    <div class="tab-content" id="tabAudit">
-      <div id="auditLogInner">
-        <div class="audit-empty">No tool calls yet.<br>Activity appears here in real time.</div>
-      </div>
-      <button class="export-btn" onclick="exportAuditLog()">↓ Export Audit Evidence (JSON)</button>
+    <div class="symptom">
+      <span class="symptom-icon">📋</span>
+      <h3 class="symptom-title">An audit or client RFP is asking about your AI governance</h3>
+      <p class="symptom-body">You're being asked to demonstrate responsible AI use. You don't have a framework, a policy document, or a named owner. You need something real — and fast.</p>
     </div>
   </div>
-
 </div>
 
-<div class="arch-footer">
-  <span class="arch-box arch-client">Vendor Data Layer</span>
-  <span class="arch-arrow">→</span>
-  <span class="arch-box arch-gateway">Controlled Tool API</span>
-  <span class="arch-arrow">→</span>
-  <span class="arch-box arch-agent">Agent Execution</span>
-  <span class="arch-arrow">→</span>
-  <span class="arch-box arch-log">Audit & Observability</span>
-  <span class="arch-tagline">Policy engine determines boundaries · AI reasons and synthesises · Every step attributable · Audit-ready by design · govagentic.ai</span>
+<!-- SERVICES -->
+<div class="section" id="services" style="padding-top: 0;">
+  <p class="section-label">What we do</p>
+  <div class="services-grid">
+
+    <div class="service-card">
+      <p class="service-tag">Assessment · Starting point</p>
+      <h3 class="service-title">AI Governance Audit</h3>
+      <p class="service-body">We map every AI tool and agent operating in your business, assess the risk exposure of each, and deliver a clear picture of where you stand — and what needs to change.</p>
+      <ul class="service-outcomes">
+        <li>Full inventory of AI tools and agentic workflows</li>
+        <li>Risk rating per tool: data handling, decision authority, vendor accountability</li>
+        <li>Gap report with prioritized remediation roadmap</li>
+        <li>Executive-ready summary for legal, ops, or board review</li>
+      </ul>
+      <p class="service-price"><strong>$4,000 – $8,000</strong> · delivered in 2–3 weeks</p>
+    </div>
+
+    <div class="service-card">
+      <p class="service-tag">Policy & Framework · Foundation</p>
+      <h3 class="service-title">AI Governance Framework</h3>
+      <p class="service-body">We design and build the governance infrastructure your organization needs — policies, accountability structures, vendor requirements, and audit-ready documentation.</p>
+      <ul class="service-outcomes">
+        <li>AI acceptable use policy tailored to your industry</li>
+        <li>Vendor AI risk assessment template and checklist</li>
+        <li>Agentic workflow approval process and decision log</li>
+        <li>Incident response protocol for AI-related failures</li>
+      </ul>
+      <p class="service-price"><strong>$8,000 – $15,000</strong> · delivered in 4–6 weeks</p>
+    </div>
+
+    <div class="service-card">
+      <p class="service-tag">Vendor Compliance · Operational</p>
+      <h3 class="service-title">Third-Party AI Risk Program</h3>
+      <p class="service-body">Your vendors are using AI too — and their risk is your risk. We implement an automated vendor compliance program so you always know what your partners are doing with AI, and whether it meets your standards.</p>
+      <ul class="service-outcomes">
+        <li>Vendor AI disclosure and attestation workflow</li>
+        <li>Automated compliance tracking and renewal alerts</li>
+        <li>Integration with TrustLayer for document verification</li>
+        <li>Audit-ready compliance dashboard</li>
+      </ul>
+      <p class="service-price"><strong>$5,000 setup + $1,500/mo</strong> · ongoing managed service</p>
+    </div>
+
+    <div class="service-card">
+      <p class="service-tag">Advisory · Ongoing</p>
+      <h3 class="service-title">Fractional AI Governance Officer</h3>
+      <p class="service-body">Not ready for a full-time hire but need ongoing governance support? We act as your embedded AI governance function — reviewing new tools, advising on policy changes, and keeping you ahead of regulation.</p>
+      <ul class="service-outcomes">
+        <li>Monthly governance review and risk update</li>
+        <li>New tool and vendor vetting on request</li>
+        <li>Regulatory monitoring — Canadian and international AI law</li>
+        <li>Direct access for legal, ops, and leadership questions</li>
+      </ul>
+      <p class="service-price"><strong>$2,500 – $5,000/mo</strong> · minimum 3-month engagement</p>
+    </div>
+
+  </div>
 </div>
 
-<script type="module">
-  import { get_vendor_profile, get_soc2_findings, get_security_questionnaire, get_contract_review, generate_risk_summary, getAuditLog, resetAuditLog, TOOL_DEFINITIONS, SYSTEM_PROMPT } from './tools.js';
-
-  const WORKER_URL = "https://yellow-bar-4f15.dmccrory.workers.dev";
-  window._sessionId = 'SID-' + Date.now().toString(36).toUpperCase();
-  let _selectedVendor = null, _vendors = [], _isLoading = false;
-  let _auditCount = 0, _traceCount = 0, _decisionTrace = null;
-  let _policyAuditLog = [];
-
-  window.switchTab = function(tab) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('active');
-    document.getElementById('tab' + tab[0].toUpperCase() + tab.slice(1)).classList.add('active');
-    if (tab === 'audit') { document.getElementById('auditBadge').classList.remove('visible'); _auditCount = 0; }
-    if (tab === 'risk') { document.getElementById('riskBadge').classList.remove('visible'); }
-    if (tab === 'trace') { document.getElementById('traceBadge').classList.remove('visible'); _traceCount = 0; }
-  };
-
-  async function init() {
-    const data = await (await fetch('./vendors.json')).json();
-    _vendors = data.vendors;
-    document.getElementById('vendorList').innerHTML = _vendors.map(v => `
-      <div class="vendor-card" onclick="selectVendor('${v.vendor_id}')" id="card-${v.vendor_id}">
-        <div class="vendor-name">${v.name}</div>
-        <div class="vendor-id">${v.vendor_id}</div>
-        <div class="vendor-meta">${v.category}<br>${v.tier} · ${v.data_residency}</div>
-        <span class="risk-badge risk-${v.risk_level}">${v.risk_level} RISK</span>
-      </div>`).join('');
-  }
-
-  window.selectVendor = function(id) {
-    _selectedVendor = _vendors.find(v => v.vendor_id === id);
-    document.querySelectorAll('.vendor-card').forEach(c => c.classList.remove('selected'));
-    document.getElementById('card-' + id)?.classList.add('selected');
-    document.getElementById('vendorHeader').innerHTML = `<div class="vendor-header-name">${_selectedVendor.name}</div><div class="vendor-header-meta">${_selectedVendor.vendor_id} · ${_selectedVendor.category} · ${_selectedVendor.tier} · Reviewed: ${_selectedVendor.last_reviewed}</div>`;
-
-    const ca = document.getElementById('chatArea');
-    ca.innerHTML = '';
-    const e = document.createElement('div');
-    e.className = 'chat-empty'; e.id = 'chatEmpty';
-    e.innerHTML = `<div class="chat-empty-icon">🔍</div><div class="chat-empty-title">${_selectedVendor.name}</div><div class="chat-empty-sub">${_selectedVendor.category} · ${_selectedVendor.tier}<br>SOC 2 · Security Questionnaire · Contract</div><div class="suggestion-chips"><div class="chip" onclick="useChip(this)">Summarize the risk posture of this vendor</div><div class="chip" onclick="useChip(this)">What are the key concerns in the SOC 2 report?</div><div class="chip" onclick="useChip(this)">Are there any contract issues I should know about?</div><div class="chip" onclick="useChip(this)">Run a full risk assessment and highlight critical findings</div></div>`;
-    ca.appendChild(e);
-
-    document.getElementById('riskCardInner').innerHTML = '<div class="risk-card-empty">Ask for a full risk assessment to populate this panel.</div>';
-    document.getElementById('riskBadge').classList.remove('visible');
-    _decisionTrace = null;
-    _traceCount = 0;
-    _policyAuditLog = [];
-    resetAuditLog();
-    document.getElementById('decisionTraceInner').innerHTML = '<div class="trace-empty">No decision trace yet.<br><br>Ask: <em>"Run a full risk assessment"</em></div>';
-    document.getElementById('traceBadge').classList.remove('visible');
-    document.getElementById('auditLogInner').innerHTML = '<div class="audit-empty">No tool calls yet.<br>Activity appears here in real time.</div>';
-    document.getElementById('auditBadge').classList.remove('visible');
-    _auditCount = 0;
-
-    document.getElementById('questionInput').disabled = false;
-    document.getElementById('sendBtn').disabled = false;
-    document.getElementById('questionInput').focus();
-  };
-
-  window.useChip = el => { document.getElementById('questionInput').value = el.textContent.trim(); sendQuestion(); };
-  window.handleKey = e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendQuestion(); } };
-  window.autoResize = el => { el.style.height = 'auto'; el.style.height = Math.min(el.scrollHeight, 110) + 'px'; };
-
-  function evaluatePolicy(question) {
-    const q = String(question || '').toLowerCase();
-    if (q.includes('all vendors') || q.includes('across the system') || q.includes('every vendor') || q.includes('compare all vendors') || q.includes('show all vendor data')) {
-      return { decision: 'block', reason: 'Request exceeds the allowed vendor scope for the current session.', policy_ref: 'SCOPE-001', blocked_action: 'Cross-vendor data access', guidance: ['Ask about the currently selected vendor', 'Request a risk summary', 'Ask for specific SOC 2, questionnaire, or contract findings'] };
-    }
-    if (q.includes('export full soc 2') || q.includes('download soc 2') || q.includes('export report') || q.includes('raw report')) {
-      return { decision: 'block', reason: 'Raw document export is not permitted in this controlled environment.', policy_ref: 'EXPORT-001', blocked_action: 'Raw document export', guidance: ['Request a summary of findings', 'Ask for key concerns in the SOC 2 report', 'Request a risk assessment for the selected vendor'] };
-    }
-    return { decision: 'allow', reason: 'Request is within current session scope.', policy_ref: 'ALLOW-DEFAULT' };
-  }
-
-  function formatPolicyBlockMessage(result) {
-    return ['⚠️ Policy Enforcement Triggered', '', result.reason, '', `Blocked action: ${result.blocked_action}`, `Policy reference: ${result.policy_ref}`, '', 'Allowed next steps:', ...result.guidance.map(g => `• ${g}`)].join('\n');
-  }
-
-  function logPolicyEvent(result) {
-    _policyAuditLog.push({ timestamp: new Date().toISOString(), tool: 'policy_engine', vendor_id: _selectedVendor?.vendor_id || 'UNKNOWN', output_summary: `${result.blocked_action} blocked (${result.policy_ref})`, status: 'blocked' });
-  }
-
-  function buildBlockedDecisionTrace(question, policyResult) {
-    _decisionTrace = {
-      trace_id: 'TRACE-' + Date.now().toString(36).toUpperCase(),
-      session_id: window._sessionId,
-      vendor_id: _selectedVendor.vendor_id,
-      vendor_name: _selectedVendor.name,
-      assessment_type: 'policy_block',
-      status: 'completed_with_policy_event',
-      generated_at: new Date().toISOString(),
-      request_summary: { requester_role: 'Risk Analyst', user_request: question, selected_scope: `${_selectedVendor.vendor_id} only`, scope_decision: 'blocked' },
-      steps: [{ step_number: 1, step_type: 'policy_event', title: 'Policy evaluation', tool_name: 'policy_engine', timestamp: new Date().toISOString(), status: 'blocked', purpose: 'Evaluate whether the request is permitted within the current session scope', input: { vendor_id: _selectedVendor.vendor_id, request: question }, output_summary: `${policyResult.blocked_action} blocked`, policy_check: { result: 'blocked', reason: `${policyResult.reason} (${policyResult.policy_ref})` }, evidence_refs: [policyResult.policy_ref] }],
-      evidence_map: [{ evidence_id: 'POL-1', source_type: 'policy_rule', source_label: policyResult.policy_ref, finding: policyResult.blocked_action, severity: 'HIGH', policy_ref: policyResult.policy_ref }],
-      final_decision: { risk_score: 'N/A', risk_level: 'BLOCKED', critical_findings: 0, high_findings: 1, medium_findings: 0, required_actions: policyResult.guidance, synthesis: 'The request was blocked by policy because it exceeded the allowed control boundary for the current session.' }
-    };
-  }
-
-  window.sendQuestion = async function() {
-    if (_isLoading || !_selectedVendor) return;
-    const input = document.getElementById('questionInput');
-    const q = input.value.trim(); if (!q) return;
-
-    const policyResult = evaluatePolicy(q);
-    if (policyResult.decision === 'block') {
-      document.getElementById('chatEmpty')?.remove();
-      input.value = ''; input.style.height = 'auto';
-      appendMsg('user', q);
-      appendMsg('policy', formatPolicyBlockMessage(policyResult));
-      logPolicyEvent(policyResult);
-      buildBlockedDecisionTrace(q, policyResult);
-      renderAuditLog();
-      renderDecisionTrace(_decisionTrace);
-      return;
-    }
-
-    document.getElementById('chatEmpty')?.remove();
-    input.value = ''; input.style.height = 'auto';
-    appendMsg('user', q);
-    const typing = appendMsg('assistant', 'Retrieving vendor documents…', true);
-    _isLoading = true; setInput(false);
-    try {
-      const result = await agentLoop(q);
-      typing.remove();
-      appendMsg('assistant', result.text || result);
-      if (result.trace) { _decisionTrace = result.trace; renderDecisionTrace(_decisionTrace); }
-    } catch(err) { typing.remove(); appendMsg('assistant', `Error: ${err.message}`); }
-    _isLoading = false; setInput(true);
-  };
-
-  async function agentLoop(q) {
-    const msgs = [{ role: 'user', content: `Vendor: ${_selectedVendor.vendor_id} (${_selectedVendor.name}), ${_selectedVendor.category}, ${_selectedVendor.tier}.\n\nRequest: ${q}` }];
-    let n = 8;
-    while (n-- > 0) {
-      const res = await fetch(WORKER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: msgs, tools: TOOL_DEFINITIONS, system: SYSTEM_PROMPT }) });
-      if (!res.ok) throw new Error(await res.text());
-      const data = await res.json();
-      msgs.push({ role: 'assistant', content: data.content });
-      if (data.stop_reason === 'end_turn') {
-        const finalText = data.content.filter(b => b.type === 'text').map(b => b.text).join('\n\n').trim() || 'No response.';
-        return { text: finalText, trace: _decisionTrace };
-      }
-      if (data.stop_reason === 'tool_use') {
-        const results = [];
-        for (const b of data.content) {
-          if (b.type !== 'tool_use') continue;
-          const vid = b.input?.vendor_id;
-          let r;
-          if (b.name === 'get_vendor_profile') r = await get_vendor_profile(vid);
-          else if (b.name === 'get_soc2_findings') r = await get_soc2_findings(vid);
-          else if (b.name === 'get_security_questionnaire') r = await get_security_questionnaire(vid);
-          else if (b.name === 'get_contract_review') r = await get_contract_review(vid);
-          else if (b.name === 'generate_risk_summary') { r = await generate_risk_summary(vid); renderRiskCard(r); _decisionTrace = buildDecisionTrace(q, r, getAuditLog()); renderDecisionTrace(_decisionTrace); }
-          else r = { error: `Unknown tool: ${b.name}` };
-          results.push({ type: 'tool_result', tool_use_id: b.id, content: JSON.stringify(r) });
-        }
-        msgs.push({ role: 'user', content: results });
-        renderAuditLog();
-      }
-    }
-    return { text: 'Max iterations reached.', trace: _decisionTrace };
-  }
-
-  function buildDecisionTrace(question, summary, auditLog) {
-    const steps = auditLog.map((e, idx) => ({ step_number: idx + 1, step_type: inferStepType(e.tool), title: inferStepTitle(e.tool), tool_name: e.tool, timestamp: e.timestamp, status: e.status || 'success', purpose: inferPurpose(e.tool), input: { vendor_id: e.vendor_id }, output_summary: e.output_summary || e.error || '—', policy_check: { result: e.status === 'error' ? 'blocked' : 'approved', reason: e.status === 'error' ? 'Tool execution failed or request could not be completed' : 'Selected vendor scope valid; read-only action permitted' }, evidence_refs: inferEvidenceRefs(e, summary) }));
-    return { trace_id: 'TRACE-' + Date.now().toString(36).toUpperCase(), session_id: window._sessionId, vendor_id: _selectedVendor.vendor_id, vendor_name: _selectedVendor.name, assessment_type: isFullAssessment(question) ? 'full_risk_assessment' : 'targeted_analysis', status: deriveTraceStatus(steps), generated_at: new Date().toISOString(), request_summary: { requester_role: 'Risk Analyst', user_request: question, selected_scope: `${_selectedVendor.vendor_id} only`, scope_decision: 'approved' }, steps, evidence_map: buildEvidenceMap(summary), final_decision: summary ? { risk_score: summary.risk_score, risk_level: summary.calculated_risk_level, critical_findings: summary.critical_flags, high_findings: summary.high_flags, medium_findings: summary.medium_flags, required_actions: summary.required_actions || [], synthesis: summary.executive_summary || `${summary.vendor_name} assessed as ${summary.calculated_risk_level} risk based on scoped evidence and policy-aligned evaluation.` } : null };
-  }
-
-  function inferStepType(tool) { if (tool === 'get_vendor_profile') return 'request_intake'; if (tool === 'generate_risk_summary') return 'risk_synthesis'; return 'tool_invocation'; }
-  function inferStepTitle(tool) { return { get_vendor_profile: 'Retrieve vendor profile', get_soc2_findings: 'Retrieve SOC 2 findings', get_security_questionnaire: 'Retrieve security questionnaire', get_contract_review: 'Retrieve contract review', generate_risk_summary: 'Generate risk summary' }[tool] || tool; }
-  function inferPurpose(tool) { return { get_vendor_profile: 'Retrieve scoped vendor metadata for assessment context', get_soc2_findings: 'Retrieve scoped SOC 2 findings for selected vendor', get_security_questionnaire: 'Retrieve security questionnaire responses for selected vendor', get_contract_review: 'Retrieve contract review observations for selected vendor', generate_risk_summary: 'Aggregate findings and generate structured risk decision output' }[tool] || 'Execute scoped assessment step'; }
-  function inferEvidenceRefs(entry, summary) { if (!summary || !summary.all_flags) return []; return summary.all_flags.filter(f => f.finding && entry.output_summary && entry.output_summary.toLowerCase().includes((f.finding || '').toLowerCase().slice(0, 12))).map(f => f.policy_ref || f.finding).slice(0, 3); }
-  function buildEvidenceMap(summary) { if (!summary || !summary.all_flags) return []; return summary.all_flags.map((f, idx) => ({ evidence_id: `EVID-${idx + 1}`, source_type: inferSourceType(f), source_label: inferSourceLabel(f), finding: f.finding, severity: f.severity, policy_ref: f.policy_ref || '' })); }
-  function inferSourceType(flag) { const ref = (flag.policy_ref || '').toLowerCase(); if (ref.includes('soc')) return 'soc2_report'; if (ref.includes('contract') || ref.includes('priv')) return 'contract_review'; return 'assessment_evidence'; }
-  function inferSourceLabel(flag) { return flag.policy_ref || 'Scoped assessment evidence'; }
-  function deriveTraceStatus(steps) { if (steps.some(s => s.status === 'error' || s.status === 'blocked')) return 'completed_with_policy_event'; if (steps.some(s => s.status === 'partial')) return 'partial'; return 'completed'; }
-  function isFullAssessment(question) { return /full risk assessment|highlight critical findings|summarize the risk posture/i.test(question); }
-
-  function renderDecisionTrace(trace) {
-    if (!trace) return;
-    const statusClass = trace.status === 'completed' ? 'completed' : trace.status === 'partial' ? 'partial' : trace.status === 'completed_with_policy_event' ? 'completed_with_policy_event' : 'blocked';
-    document.getElementById('decisionTraceInner').innerHTML = `
-      <div class="trace-wrap">
-        <div class="trace-card">
-          <div class="trace-header-title">Decision Trace</div>
-          <div class="trace-header-meta">Vendor: ${esc(trace.vendor_name)} · ${esc(trace.vendor_id)}<br>Assessment: ${esc(trace.assessment_type)} · Session: ${esc(trace.session_id)}<br>Generated: ${new Date(trace.generated_at).toLocaleString('en-CA')}</div>
-          <div style="margin-top:8px;"><span class="trace-status-pill ${statusClass}">${esc(trace.status.replaceAll('_', ' ').toUpperCase())}</span></div>
+<!-- WHY NOW -->
+<div class="why-now">
+  <div class="why-now-inner">
+    <div>
+      <h2 class="why-now-heading">Why this matters <em>right now</em></h2>
+    </div>
+    <div class="why-points">
+      <div class="why-point">
+        <span class="why-num">01</span>
+        <div>
+          <p class="why-text-title">Regulation is arriving — and it won't wait for you to be ready</p>
+          <p class="why-text-body">Canada's Artificial Intelligence and Data Act (AIDA) and the EU AI Act are reshaping what accountable AI use looks like for any company operating at scale. Organizations that build governance frameworks now will adapt easily. Those that wait will scramble.</p>
         </div>
-        <div class="trace-card">
-          <div class="trace-section-title">Request Summary</div>
-          <div class="trace-request-grid">
-            <div class="trace-kv"><div class="trace-kv-label">Requester Role</div><div class="trace-kv-value">${esc(trace.request_summary.requester_role)}</div></div>
-            <div class="trace-kv"><div class="trace-kv-label">User Request</div><div class="trace-kv-value">${esc(trace.request_summary.user_request)}</div></div>
-            <div class="trace-kv"><div class="trace-kv-label">Selected Scope</div><div class="trace-kv-value">${esc(trace.request_summary.selected_scope)}</div></div>
-            <div class="trace-kv"><div class="trace-kv-label">Scope Decision</div><div class="trace-kv-value">${esc(trace.request_summary.scope_decision)}</div></div>
-          </div>
+      </div>
+      <div class="why-point">
+        <span class="why-num">02</span>
+        <div>
+          <p class="why-text-title">Agentic AI is a different risk category than AI tools</p>
+          <p class="why-text-body">A ChatGPT subscription is a productivity tool. An AI agent that autonomously emails clients, processes invoices, or makes scheduling decisions is an operational actor. The governance requirements are fundamentally different — and most companies haven't made that distinction yet.</p>
         </div>
-        <div class="trace-card">
-          <div class="trace-section-title">Execution Steps</div>
-          ${trace.steps.map(step => `
-            <div class="trace-step ${esc(step.status)}" style="margin-bottom:10px;">
-              <div class="trace-step-top">
-                <div class="trace-step-title">Step ${step.step_number} · ${esc(step.title)}</div>
-                <span class="trace-status-pill trace-step-status ${esc(step.status)}">${esc(step.status.toUpperCase())}</span>
-              </div>
-              <div class="trace-step-subtitle">${esc(step.tool_name)} · ${new Date(step.timestamp).toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</div>
-              <div class="trace-step-body">
-                <div class="trace-step-box"><div class="trace-step-label">Purpose</div><div class="trace-step-value">${esc(step.purpose)}</div></div>
-                <div class="trace-step-box"><div class="trace-step-label">Input</div><div class="trace-step-value">${esc(JSON.stringify(step.input, null, 2))}</div></div>
-                <div class="trace-step-box"><div class="trace-step-label">Output Summary</div><div class="trace-step-value">${esc(step.output_summary)}</div></div>
-                <div class="trace-step-box"><div class="trace-step-label">Policy Check</div><div class="trace-step-value">Result: ${esc(step.policy_check.result)}\nReason: ${esc(step.policy_check.reason)}</div></div>
-              </div>
-            </div>`).join('')}
+      </div>
+      <div class="why-point">
+        <span class="why-num">03</span>
+        <div>
+          <p class="why-text-title">Your clients and auditors are starting to ask</p>
+          <p class="why-text-body">Enterprise procurement teams, insurers, and auditors are adding AI governance questions to their vendor assessments. If you can't answer them clearly, you're a risk — and contracts go to the company that can.</p>
         </div>
-        ${trace.evidence_map?.length ? `<div class="trace-card"><div class="trace-section-title">Evidence Mapping</div><div class="trace-evidence-row">${trace.evidence_map.map(item => `<div class="trace-evidence-item"><div class="trace-evidence-source">${esc(item.source_label)}</div><div class="trace-evidence-finding">${esc(item.finding)}</div><div class="trace-evidence-meta">Severity: ${esc(item.severity)}${item.policy_ref ? ` · Policy Ref: ${esc(item.policy_ref)}` : ''}</div></div>`).join('')}</div></div>` : ''}
-        ${trace.final_decision ? `<div class="trace-card"><div class="trace-section-title">Final Decision Summary</div><div class="trace-final-grid"><div class="trace-kv"><div class="trace-kv-label">Risk Score</div><div class="trace-kv-value">${esc(trace.final_decision.risk_score)}</div></div><div class="trace-kv"><div class="trace-kv-label">Risk Level</div><div class="trace-kv-value">${esc(trace.final_decision.risk_level)}</div></div><div class="trace-kv"><div class="trace-kv-label">Finding Counts</div><div class="trace-kv-value">Critical: ${esc(trace.final_decision.critical_findings)}\nHigh: ${esc(trace.final_decision.high_findings)}\nMedium: ${esc(trace.final_decision.medium_findings)}</div></div><div class="trace-kv"><div class="trace-kv-label">Required Actions</div><div class="trace-kv-value">${trace.final_decision.required_actions?.length ? `<ul class="trace-actions-list">${trace.final_decision.required_actions.map(a=>`<li>${esc(a)}</li>`).join('')}</ul>` : 'None'}</div></div><div class="trace-kv"><div class="trace-kv-label">Final Synthesis</div><div class="trace-kv-value">${esc(trace.final_decision.synthesis)}</div></div></div></div>` : ''}
-      </div>`;
-    if (!document.getElementById('tab-trace').classList.contains('active')) { _traceCount++; const b = document.getElementById('traceBadge'); b.textContent = _traceCount; b.classList.add('visible'); }
-  }
-
-  function renderRiskCard(s) {
-    if (!s || s.error) return;
-    const crit = s.all_flags?.filter(f => f.severity==='CRITICAL')||[];
-    const high = s.all_flags?.filter(f => f.severity==='HIGH')||[];
-    const med  = s.all_flags?.filter(f => f.severity==='MEDIUM')||[];
-    const top  = [...crit,...high,...med].slice(0,7);
-    document.getElementById('riskCardInner').innerHTML = `
-      <div style="padding:4px 0 12px">
-        <div class="rc-vendor">${s.vendor_name}</div>
-        <div class="rc-meta">${s.vendor_id} · ${s.tier} · ${s.category}</div>
-        <div class="rc-score-row ${s.calculated_risk_level}">
-          <div><div class="rc-score-label ${s.calculated_risk_level}">${s.calculated_risk_level} RISK</div><div class="rc-score-sub">Score: ${s.risk_score} · ${s.recommended_review_frequency} review</div></div>
-          <div class="rc-score-val ${s.calculated_risk_level}">${s.risk_score}</div>
+      </div>
+      <div class="why-point">
+        <span class="why-num">04</span>
+        <div>
+          <p class="why-text-title">First movers build the standard — everyone else follows it</p>
+          <p class="why-text-body">The companies that establish internal AI governance frameworks today become the benchmark their industry peers are measured against. That's a competitive advantage that compounds over time.</p>
         </div>
-        <div class="rc-flag-row">
-          <div class="rc-flag-box"><div class="rc-flag-num CRITICAL">${s.critical_flags}</div><div class="rc-flag-label">CRITICAL</div></div>
-          <div class="rc-flag-box"><div class="rc-flag-num HIGH">${s.high_flags}</div><div class="rc-flag-label">HIGH</div></div>
-          <div class="rc-flag-box"><div class="rc-flag-num MEDIUM">${s.medium_flags}</div><div class="rc-flag-label">MEDIUM</div></div>
-        </div>
-        ${top.length ? `<div class="rc-section-title">Top Findings</div>${top.map(f=>`<div class="rc-flag-item ${f.severity}"><span class="rc-flag-sev ${f.severity}">${f.severity}</span>${esc(f.finding)}<div class="rc-policy-ref">${f.policy_ref||''}</div></div>`).join('')}` : ''}
-        ${s.required_actions?.length ? `<div class="rc-section-title">Required Actions</div><ul class="rc-actions-list">${s.required_actions.map(a=>`<li class="rc-action-item">${esc(a)}</li>`).join('')}</ul>` : ''}
-        <div class="rc-footer">Engine: ${s.scoring_engine_version} · ${s.regulatory_frameworks?.join(' · ')}<br>Generated: ${new Date(s.summary_generated).toLocaleString('en-CA')}</div>
-      </div>`;
-    if (!document.getElementById('tab-risk').classList.contains('active')) { document.getElementById('riskBadge').classList.add('visible'); }
-  }
+      </div>
+    </div>
+  </div>
+</div>
 
-  function renderAuditLog() {
-    const baseLog = getAuditLog();
-    const log = [...baseLog, ..._policyAuditLog].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    if (!log.length) return;
-    document.getElementById('auditLogInner').innerHTML = log.slice().reverse().map(e => `
-      <div class="audit-entry${e.status === 'blocked' ? ' policy-block' : ''}">
-        <div class="audit-time">${new Date(e.timestamp).toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}</div>
-        <div class="audit-tool${e.status === 'blocked' ? ' blocked' : ''}">${e.tool}</div>
-        <div class="audit-vendor">Vendor: ${e.vendor_id}</div>
-        <div class="audit-output">${e.output_summary||e.error||'—'}</div>
-        <div class="audit-status-${e.status === 'blocked' ? 'blocked' : e.status}">${(e.status||'').toUpperCase()}</div>
-      </div>`).join('');
-    if (!document.getElementById('tab-audit').classList.contains('active')) { _auditCount++; const b = document.getElementById('auditBadge'); b.textContent = _auditCount; b.classList.add('visible'); }
-  }
+<!-- ABOUT -->
+<div class="about">
+  <div>
+    <p class="section-label">About Govagentic</p>
+    <p class="about-quote">"Most AI governance advice is either too theoretical to act on, or too generic to apply. <em>We build frameworks that actually get used.</em>"</p>
+    <p class="about-body">Govagentic is a specialist AI governance consultancy built for mid-market organizations that are serious about responsible AI — not as a PR exercise, but as a genuine operational and legal foundation.</p>
+    <p class="about-body">We combine deep expertise in risk management, compliance frameworks, and agentic AI systems to help legal, ops, and risk leaders get ahead of a problem that isn't going away. Our engagements are practical, fast-moving, and delivered by a senior advisor — not a junior team working from a template.</p>
+    <p class="about-body">We're based in Canada and work with organizations across North America navigating the intersection of AI adoption and governance accountability.</p>
+  </div>
+  <div class="about-sidebar">
+    <div class="credential">
+      <p class="credential-label">Approach</p>
+      <p class="credential-value">Practical frameworks over theoretical advice</p>
+    </div>
+    <div class="credential">
+      <p class="credential-label">Geography</p>
+      <p class="credential-value">Canada-based · North America focus</p>
+    </div>
+    <div class="credential">
+      <p class="credential-label">Engagement model</p>
+      <p class="credential-value">Senior advisor — you work with the principal, not a team</p>
+    </div>
+    <div class="credential">
+      <p class="credential-label">Specialization</p>
+      <p class="credential-value">Agentic AI governance · Third-party AI risk · Compliance readiness</p>
+    </div>
+    <div class="credential">
+      <p class="credential-label">Tools & platforms</p>
+      <p class="credential-value">TrustLayer · Claude AI · Cloudflare · Modern compliance stack</p>
+    </div>
+  </div>
+</div>
 
-  window.exportDecisionTrace = () => {
-    if (!_decisionTrace) return;
-    const blob = new Blob([JSON.stringify(_decisionTrace, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = `govagentic-trace-${window._sessionId}.json`; a.click(); URL.revokeObjectURL(url);
-  };
+<!-- CTA -->
+<div class="cta-section" id="contact">
+  <div class="cta-inner">
+    <p class="cta-eyebrow">Get started</p>
+    <h2 class="cta-heading">Let's talk about what's actually happening in your organization.</h2>
+    <p class="cta-body">A 30-minute discovery call is enough to understand where your biggest AI governance gaps are and whether we're the right fit to help you close them.</p>
+    <a href="/cdn-cgi/l/email-protection#4028252c2c2f00272f362127252e3429236e2129" class="cta-email">
+      <span class="__cf_email__" data-cfemail="84ece1e8e8ebc4e3ebf2e5e3e1eaf0ede7aae5ed">[email&#160;protected]</span> →
+    </a>
+  </div>
+</div>
 
-  window.exportAuditLog = () => {
-    const baseLog = getAuditLog();
-    const combined = [...baseLog, ..._policyAuditLog].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-    const blob = new Blob([JSON.stringify(combined, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href=url; a.download=`govagentic-audit-${window._sessionId}.json`; a.click(); URL.revokeObjectURL(url);
-  };
-
-  function formatAssistantText(text) {
-    let t = esc(String(text));
-    t = t.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    t = t.replace(/\*(.*?)\*/g, '<em>$1</em>');
-    t = t.replace(/^###\s+(.*)$/gm, '<br><strong>$1</strong>');
-    t = t.replace(/^##\s+(.*)$/gm, '<br><strong>$1</strong>');
-    t = t.replace(/^#\s+(.*)$/gm, '<br><strong>$1</strong>');
-    t = t.replace(/^---+$/gm, '<br>');
-    t = t.replace(/^\|[\s\-:]+(\|[\s\-:]+)+\|?$/gm, '');
-    t = t.replace(/^\|(.+)\|$/gm, function(_, row) { const cells = row.split('|').map(c => c.trim()).filter(Boolean); if (cells.length === 1) return cells[0]; if (cells.length === 2) return `<strong>${cells[0]}</strong> — ${cells[1]}`; return `<strong>${cells[0]}</strong> — ${cells.slice(1).join(' · ')}`; });
-    t = t.replace(/^\-\s+(.*)$/gm, '• $1');
-    t = t.replace(/^(\d+)\.\s+(.*)$/gm, '$1. $2');
-    t = t.replace(/\n/g, '<br>');
-    t = t.replace(/(<br>\s*){3,}/g, '<br><br>');
-    return t;
-  }
-
-  function appendMsg(role, text, isTyping=false) {
-    const area = document.getElementById('chatArea');
-    const div = document.createElement('div');
-    const cssRole = role === 'policy' ? 'assistant msg-policy' : role;
-    div.className = `msg msg-${cssRole}${isTyping?' msg-typing':''}`;
-    const label = role === 'user' ? 'Risk Analyst' : role === 'policy' ? 'Policy Engine' : 'Govagentic';
-    const rendered = role === 'user' ? esc(text).replace(/\n/g, '<br>') : formatAssistantText(text);
-    div.innerHTML = `<div class="msg-label">${label}</div><div class="msg-bubble">${rendered}</div>`;
-    area.appendChild(div);
-    area.scrollTop = area.scrollHeight;
-    return div;
-  }
-
-  function setInput(on) { document.getElementById('questionInput').disabled=!on; document.getElementById('sendBtn').disabled=!on; }
-  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  window._onAuditLog = () => renderAuditLog();
-  init();
-</script>
-</body>
-</html>
+<!-- FOOTER -->
+<footer>
